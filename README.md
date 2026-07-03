@@ -194,7 +194,7 @@ Timestamp:
 Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/NetShield-A-Simulated-Firewall.git
+git clone https://github.com/mallsatvik/NetShield-A-Simulated-Firewall.git
 ```
 
 Move into the folder
@@ -214,7 +214,7 @@ Activate
 Windows
 
 ```bash
-.venv\Scripts\activate
+.venv\Scripts\Activate.p1
 ```
 
 Install dependencies
@@ -299,7 +299,7 @@ Alert sent to n8n
 
 B.Tech Computer Science Engineering
 
-VIT Chennai
+VITC
 
 ---
 
