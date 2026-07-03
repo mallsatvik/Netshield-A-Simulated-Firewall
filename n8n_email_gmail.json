@@ -1,0 +1,74 @@
+{
+  "name": "CNN Firewall - Email + Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cnn-firewall"
+      },
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "sheetId": "<YOUR_SHEET_ID>",
+        "range": "Logs!A:G",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "columns": [
+          "timestamp",
+          "src",
+          "dst",
+          "sport",
+          "dport",
+          "score",
+          "action"
+        ],
+        "values": "={{ [ [ $json[\"timestamp\"], $json[\"src\"], $json[\"dst\"], $json[\"sport\"], $json[\"dport\"], $json[\"score\"], $json[\"action\"] ] ] }}"
+      },
+      "id": "2",
+      "name": "Append to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "<YOUR_GOOGLE_SHEETS_CREDENTIAL_ID>",
+          "name": "NetShield Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "<YOUR_EMAIL@gmail.com>",
+        "toEmail": "<ADMIN_EMAIL@gmail.com>",
+        "subject": "🚨 CNN Firewall Alert: {{$json[\"src\"]}} blocked",
+        "text": "Source IP {{$json[\"src\"]}} attempted to reach {{$json[\"dst\"]}}:{{$json[\"dport\"]}}\n\nScore: {{$json[\"score\"]}}\nAction: {{$json[\"action\"]}}\nTimestamp: {{$json[\"timestamp\"]}}"
+      },
+      "id": "3",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "credentials": {
+        "smtp": {
+          "id": "<YOUR_EMAIL_CREDENTIAL_ID>",
+          "name": "NetShield Email Alerts"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          { "node": "Send Email", "type": "main", "index": 0 },
+          { "node": "Append to Google Sheets", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": true
+}

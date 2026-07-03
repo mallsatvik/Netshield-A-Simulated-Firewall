@@ -1,0 +1,7 @@
+IMG_H, IMG_W = 32, 32
+MAX_BYTES = IMG_H * IMG_W
+CHANNELS = 1
+BATCH_SIZE = 128
+EPOCHS = 15
+MODEL_PATH = "models/cnn_firewall.h5"
+THRESH = 0.9
